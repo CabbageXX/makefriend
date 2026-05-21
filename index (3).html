@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>StudentBoard — มาเจอกัน 👋</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F172A;
+  --card:#1E293B;
+  --card2:#243044;
+  --primary:#6C63FF;
+  --secondary:#8B5CF6;
+  --accent:#38BDF8;
+  --text:#F8FAFC;
+  --text2:#94A3B8;
+  --text3:#475569;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.14);
+  --glass:rgba(30,41,59,0.7);
+  --glass2:rgba(108,99,255,0.12);
+  --r:16px;--rs:10px;--rm:12px;
+  --shadow:0 4px 24px rgba(0,0,0,0.3);
+  --glow:0 0 32px rgba(108,99,255,0.25);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Prompt',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* ── Particles ── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;opacity:0;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.6}90%{opacity:.2}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+
+/* ── BG gradient ── */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(108,99,255,0.12) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(56,189,248,0.08) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+/* ── Navbar ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(15,23,42,0.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:34px;height:34px;border-radius:10px;border:1.5px dashed var(--border2);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;position:relative;transition:border-color .2s;flex-shrink:0}
+.nav-logo:hover{border-color:var(--primary)}
+.nav-logo img{width:100%;height:100%;object-fit:contain}
+.nav-logo input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.nav-logo .hint{font-size:8px;color:var(--text3);text-align:center;line-height:1.2;pointer-events:none}
+.nav-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-school{font-size:12px;color:var(--text2);font-weight:300}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn{padding:7px 16px;border-radius:var(--rs);border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;transition:all .2s}
+.nav-btn:hover{background:var(--card);color:var(--text)}
+.nav-btn.primary{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:500}
+.nav-btn.primary:hover{background:#7c74ff}
+
+/* ── Layout ── */
+.page{display:none;position:relative;z-index:1}
+.page.active{display:block;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Home Page ── */
+#page-home{padding-top:64px}
+
+/* Hero */
+.hero{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem 2rem}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--glass2);border:1px solid rgba(108,99,255,0.3);border-radius:99px;padding:6px 16px;font-size:12px;color:var(--accent);margin-bottom:1.5rem;backdrop-filter:blur(8px)}
+.hero-badge span{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+.hero-title{font-family:'Poppins',sans-serif;font-size:clamp(36px,6vw,64px);font-weight:700;line-height:1.15;margin-bottom:1rem}
+.hero-title .line1{display:block}
+.hero-title .line2{display:block;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(14px,2vw,17px);color:var(--text2);max-width:480px;margin-bottom:2.5rem;font-weight:300}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem}
+.btn-hero{padding:13px 28px;border-radius:99px;font-family:'Prompt',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;border:none}
+.btn-hero.primary{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 4px 24px rgba(108,99,255,0.4)}
+.btn-hero.primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(108,99,255,0.5)}
+.btn-hero.ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border2);backdrop-filter:blur(8px)}
+.btn-hero.ghost:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat-num{font-family:'Poppins',sans-serif;font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:12px;color:var(--text3)}
+
+/* Search + Filter bar */
+.discover-section{max-width:900px;margin:0 auto;padding:0 1.25rem 4rem}
+.search-bar{display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap input{width:100%;background:var(--glass);border:1px solid var(--border);border-radius:99px;padding:11px 16px 11px 42px;font-size:14px;font-family:'Prompt',sans-serif;color:var(--text);outline:none;backdrop-filter:blur(12px);transition:border-color .2s,box-shadow .2s}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-wrap input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,0.15)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.btn-random{padding:11px 18px;border-radius:99px;background:linear-gradient(135deg,var(--accent),#6de4ff);color:#0F172A;font-weight:600;font-size:13px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;white-space:nowrap;transition:all .2s}
+.btn-random:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(56,189,248,0.4)}
+
+.filter-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+.chip{padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;font-family:'Prompt',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap}
+.chip:hover{border-color:var(--primary);color:var(--text)}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.section-title{font-family:'Poppins',sans-serif;font-size:18px;font-weight:600}
+.count-pill{background:rgba(108,99,255,0.15);color:var(--primary);font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.live-dot{display:inline-block;width:6px;height:6px;background:#4ade80;border-radius:50%;margin-right:6px;animation:pulse 2s infinite;vertical-align:middle}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* Member grid */
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+
+/* Member card */
+.mcard{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;backdrop-filter:blur(12px);transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer;animation:fadeUp .35s ease both;position:relative;overflow:hidden}
+.mcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(108,99,255,0.04),transparent);opacity:0;transition:opacity .2s}
+.mcard:hover{transform:translateY(-4px);border-color:rgba(108,99,255,0.4);box-shadow:0 8px 32px rgba(108,99,255,0.2)}
+.mcard:hover::before{opacity:1}
+.mcard-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.mcard-av{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(108,99,255,0.4);flex-shrink:0}
+.mcard-av-init{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;flex-shrink:0;border:2px solid rgba(108,99,255,0.3);color:#fff}
+.mcard-info{flex:1;min-width:0}
+.mcard-name{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard-province{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px}
+.mcard-bio{font-size:13px;color:var(--text2);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px}
+.mcard-contacts{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.ctag{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:99px;padding:2px 8px;font-size:11px;color:var(--text2)}
+.mcard-footer{display:flex;align-items:center;justify-content:space-between}
+.mcard-time{font-size:11px;color:var(--text3)}
+.like-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;font-family:'Prompt',sans-serif;cursor:pointer;transition:all .2s}
+.like-btn:hover,.like-btn.liked{background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.3);color:#f87171}
+.like-btn.liked{animation:pop .25s ease}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+/* Empty / Loading */
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3);grid-column:1/-1}
+.empty .icon{font-size:40px;margin-bottom:12px}
+.loading{text-align:center;padding:3rem;color:var(--text2);grid-column:1/-1}
+.spinner{display:inline-block;width:22px;height:22px;border:2px solid var(--border2);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Form Page ── */
+#page-form{padding:80px 1.25rem 4rem;max-width:540px;margin:0 auto}
+.form-title{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.form-sub{font-size:14px;color:var(--text2);margin-bottom:1.75rem}
+.glass-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;backdrop-filter:blur(16px)}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px;letter-spacing:.02em}
+.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--rs);padding:10px 13px;font-size:14px;font-family:'Prompt',sans-serif;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;resize:none}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,0.15);background:rgba(108,99,255,0.05)}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;cursor:pointer}
+.field select option{background:#1E293B;color:var(--text)}
+
+/* Photo upload */
+.photo-field-row{display:flex;flex-direction:column;align-items:center;gap:8px}
+.photo-upload{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.04);border:2px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .2s,background .2s}
+.photo-upload:hover{border-color:var(--primary);background:rgba(108,99,255,0.08)}
+.photo-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.photo-upload .upload-icon{font-size:22px}
+.photo-upload .upload-text{font-size:9px;color:var(--text3);text-align:center;line-height:1.2}
+.photo-upload img.preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-upload .change-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.55);border-radius:50%;display:none;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.photo-upload:hover .change-overlay{display:flex}
+.photo-field-hint{font-size:12px;color:var(--text3);text-align:center}
+
+/* Contact grid */
+.contact-grid{display:flex;flex-direction:column;gap:8px}
+.contact-item{border:1.5px solid var(--border);border-radius:var(--rs);overflow:hidden;transition:border-color .15s,box-shadow .15s;background:rgba(255,255,255,0.02)}
+.contact-item.selected{border-color:var(--primary);box-shadow:0 0 0 2px rgba(108,99,255,0.15)}
+.contact-toggle{display:flex;align-items:center;gap:10px;padding:10px 13px;cursor:pointer;user-select:none;transition:background .15s}
+.contact-toggle:hover{background:rgba(255,255,255,0.03)}
+.contact-item.selected .contact-toggle{background:rgba(108,99,255,0.08)}
+.contact-icon{font-size:17px;flex-shrink:0}
+.contact-label{font-size:14px;font-weight:500;flex:1}
+.contact-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all .15s;flex-shrink:0}
+.contact-item.selected .contact-check{background:var(--primary);border-color:var(--primary);color:#fff}
+.contact-input{display:none;width:100%;border:none;border-top:1px solid var(--border);background:rgba(108,99,255,0.05);padding:9px 13px;font-size:14px;font-family:'Prompt',sans-serif;color:var(--text);outline:none}
+.contact-input::placeholder{color:var(--text3)}
+.contact-input:focus{background:rgba(108,99,255,0.08)}
+
+.err{font-size:13px;color:#f87171;margin-top:10px;display:none;padding:8px 12px;background:rgba(248,113,113,0.08);border-radius:var(--rs);border:1px solid rgba(248,113,113,0.2)}
+.err.show{display:block}
+
+.btn-submit{width:100%;padding:13px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-family:'Prompt',sans-serif;font-weight:600;cursor:pointer;margin-top:.75rem;transition:opacity .15s,transform .1s,box-shadow .2s;box-shadow:0 4px 20px rgba(108,99,255,0.35)}
+.btn-submit:hover{opacity:.9;box-shadow:0 6px 28px rgba(108,99,255,0.45)}
+.btn-submit:active{transform:scale(.98)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:420px;padding:2rem;position:relative;animation:modalUp .3s ease}
+@keyframes modalUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:var(--card2);color:var(--text)}
+.modal-avatar-wrap{text-align:center;margin-bottom:1rem}
+.modal-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--primary);margin:0 auto}
+.modal-avatar-init{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:24px;font-weight:700;border:3px solid var(--primary);color:#fff;margin:0 auto}
+.modal-name{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;text-align:center;margin-bottom:2px}
+.modal-province{font-size:13px;color:var(--text2);text-align:center;margin-bottom:.75rem}
+.modal-bio{font-size:14px;color:var(--text2);text-align:center;margin-bottom:1.25rem;line-height:1.6;padding:0 .5rem}
+.modal-contacts{display:flex;flex-direction:column;gap:8px}
+.modal-contact-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:var(--rs);padding:9px 13px;border:1px solid var(--border)}
+.modal-contact-row .icon{font-size:16px}
+.modal-contact-row .label{font-size:12px;color:var(--text3);min-width:56px}
+.modal-contact-row .val{font-size:14px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-time{font-size:12px;color:var(--text3);text-align:center;margin-top:1rem}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+
+@media(max-width:600px){
+  .nav-school{display:none}
+  .hero-title{font-size:32px}
+  .hero-cta{flex-direction:column;align-items:center}
+  .btn-hero{width:100%;max-width:280px}
+  .search-bar{flex-direction:column}
+  .btn-random{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div id="particles"></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo" id="nav-logo">
+      <span class="hint">โลโก้</span>
+      <input type="file" accept="image/*" onchange="handleLogoUpload(event)"/>
+    </div>
+    <div>
+      <div class="nav-title">Digital Entrepreneur</div>
+      <!-- แก้ชื่อโรงเรียนตรงนี้ -->
+      <div class="nav-school">Khon Kaen University</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn" onclick="showPage('page-home')">🏠 หน้าหลัก</button>
+    <button class="nav-btn primary" onclick="showPage('page-form')">+ แนะนำตัว</button>
+  </div>
+</nav>
+
+<!-- ══ HOME PAGE ══ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-badge"><span></span>Community Board · Live</div>
+    <h1 class="hero-title">
+      <span class="line1">ยินดีต้อนรับสู่</span>
+      <span class="line2">บอร์ดนักศึกษา</span>
+    </h1>
+    <p class="hero-sub">มาจุ่มเพื่อนใหม่และเจอกันในรั้วมหาลัยน้าาา  🔮✨</p>
+    <div class="hero-cta">
+      <button class="btn-hero primary" onclick="scrollToDiscover()">🚀 รู้จักเพื่อนใหม่</button>
+      <button class="btn-hero ghost" onclick="showPage('page-form')">✏️ แนะนำตัวเลย</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="stat-members">0</div><div class="stat-label">สมาชิก</div></div>
+      <div class="stat"><div class="stat-num" id="stat-provinces">0</div><div class="stat-label">จังหวัด</div></div>
+      <div class="stat"><div class="stat-num" id="stat-likes">0</div><div class="stat-label">ไลก์รวม</div></div>
+    </div>
+  </section>
+
+  <section class="discover-section" id="discover">
+    <div class="search-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="ค้นหาชื่อ, จังหวัด, หรือ IG..." oninput="filterMembers()"/>
+      </div>
+      <button class="btn-random" onclick="openRandomMember()">🎲 สุ่มเพื่อน</button>
+    </div>
+    <div class="filter-chips" id="filter-chips">
+      <button class="chip active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
+      <button class="chip" data-filter="ig" onclick="setFilter('ig',this)">📸 Instagram</button>
+      <button class="chip" data-filter="line" onclick="setFilter('line',this)">💬 Line</button>
+      <button class="chip" data-filter="tiktok" onclick="setFilter('tiktok',this)">🎵 TikTok</button>
+      <button class="chip" data-filter="discord" onclick="setFilter('discord',this)">🎮 Discord</button>
+    </div>
+    <div class="section-head">
+      <div class="section-title">สมาชิกทั้งหมด <span class="count-pill" id="member-count">0</span></div>
+      <span><span class="live-dot"></span><span style="font-size:12px;color:var(--text3)">Realtime</span></span>
+    </div>
+    <div class="member-grid" id="members-grid">
+      <div class="loading"><div class="spinner"></div><br>กำลังโหลด...</div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ FORM PAGE ══ -->
+<div id="page-form" class="page">
+  <div style="max-width:540px;margin:0 auto">
+    <div class="form-title">👋 แนะนำตัวเลย!</div>
+    <div class="form-sub">กรอกข้อมูลด้านล่าง แล้วไปดูว่ามีใครอีกบ้าง</div>
+    <div class="glass-card">
+
+      <div class="field">
+        <label>รูปโปรไฟล์ (ไม่บังคับ)</label>
+        <div class="photo-field-row">
+          <div class="photo-upload" id="photo-upload">
+            <span class="upload-icon">📷</span>
+            <span class="upload-text">อัปโหลด<br>รูป</span>
+            <input type="file" accept="image/*" onchange="handlePhotoUpload(event)"/>
+            <div class="change-overlay">เปลี่ยน</div>
+          </div>
+          <div class="photo-field-hint">คลิกเพื่อใส่รูป • JPG/PNG ไม่เกิน 2MB</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>ชื่อเล่น *</label>
+        <input type="text" id="input-nickname" placeholder="เช่น ปลา, มิ้ว, แบงค์" maxlength="30"/>
+      </div>
+
+      <div class="field">
+        <label>จังหวัด *</label>
+        <select id="input-province">
+          <option value="">-- เลือกจังหวัด --</option>
+          <option>กรุงเทพมหานคร</option><option>กระบี่</option><option>กาญจนบุรี</option><option>กาฬสินธุ์</option><option>กำแพงเพชร</option><option>ขอนแก่น</option><option>จันทบุรี</option><option>ฉะเชิงเทรา</option><option>ชลบุรี</option><option>ชัยนาท</option><option>ชัยภูมิ</option><option>ชุมพร</option><option>เชียงราย</option><option>เชียงใหม่</option><option>ตรัง</option><option>ตราด</option><option>ตาก</option><option>นครนายก</option><option>นครปฐม</option><option>นครพนม</option><option>นครราชสีมา</option><option>นครศรีธรรมราช</option><option>นครสวรรค์</option><option>นนทบุรี</option><option>นราธิวาส</option><option>น่าน</option><option>บึงกาฬ</option><option>บุรีรัมย์</option><option>ปทุมธานี</option><option>ประจวบคีรีขันธ์</option><option>ปราจีนบุรี</option><option>ปัตตานี</option><option>พระนครศรีอยุธยา</option><option>พะเยา</option><option>พังงา</option><option>พัทลุง</option><option>พิจิตร</option><option>พิษณุโลก</option><option>เพชรบุรี</option><option>เพชรบูรณ์</option><option>แพร่</option><option>ภูเก็ต</option><option>มหาสารคาม</option><option>มุกดาหาร</option><option>แม่ฮ่องสอน</option><option>ยโสธร</option><option>ยะลา</option><option>ร้อยเอ็ด</option><option>ระนอง</option><option>ระยอง</option><option>ราชบุรี</option><option>ลพบุรี</option><option>ลำปาง</option><option>ลำพูน</option><option>เลย</option><option>ศรีสะเกษ</option><option>สกลนคร</option><option>สงขลา</option><option>สตูล</option><option>สมุทรปราการ</option><option>สมุทรสงคราม</option><option>สมุทรสาคร</option><option>สระแก้ว</option><option>สระบุรี</option><option>สิงห์บุรี</option><option>สุโขทัย</option><option>สุพรรณบุรี</option><option>สุราษฎร์ธานี</option><option>สุรินทร์</option><option>หนองคาย</option><option>หนองบัวลำภู</option><option>อ่างทอง</option><option>อำนาจเจริญ</option><option>อุดรธานี</option><option>อุตรดิตถ์</option><option>อุทัยธานี</option><option>อุบลราชธานี</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>ช่องทางติดต่อ * <span style="font-weight:400;color:var(--text3)">(เลือกได้มากกว่า 1)</span></label>
+        <div class="contact-grid">
+          <div class="contact-item" data-id="ig">
+            <div class="contact-toggle"><span class="contact-icon">📸</span><span class="contact-label">Instagram</span><div class="contact-check">✓</div></div>
+            <input type="text" class="contact-input" placeholder="กรอก @username" maxlength="40"/>
+          </div>
+          <div class="contact-item" data-id="fb">
+            <div class="contact-toggle"><span class="contact-icon">📘</span><span class="contact-label">Facebook</span><div class="contact-check">✓</div></div>
+            <input type="text" class="contact-input" placeholder="กรอกชื่อโปรไฟล์" maxlength="60"/>
+          </div>
+          <div class="contact-item" data-id="line">
+            <div class="contact-toggle"><span class="contact-icon">💬</span><span class="contact-label">Line</span><div class="contact-check">✓</div></div>
+            <input type="text" class="contact-input" placeholder="กรอก Line ID" maxlength="40"/>
+          </div>
+          <div class="contact-item" data-id="tiktok">
+            <div class="contact-toggle"><span class="contact-icon">🎵</span><span class="contact-label">TikTok</span><div class="contact-check">✓</div></div>
+            <input type="text" class="contact-input" placeholder="กรอก @username" maxlength="40"/>
+          </div>
+          <div class="contact-item" data-id="discord">
+            <div class="contact-toggle"><span class="contact-icon">🎮</span><span class="contact-label">Discord</span><div class="contact-check">✓</div></div>
+            <input type="text" class="contact-input" placeholder="กรอก username" maxlength="40"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>แนะนำตัวสั้นๆ (ไม่บังคับ)</label>
+        <textarea id="input-bio" placeholder="เช่น ชอบฟังเพลง K-POP ชอบวาดรูป..." maxlength="100" rows="2"></textarea>
+      </div>
+
+      <p class="err" id="form-err"></p>
+      <button class="btn-submit" id="btn-submit" onclick="handleSubmit()">✨ ยืนยัน ไปดูคนอื่นๆ เลย!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL ══ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-avatar-wrap" id="modal-av"></div>
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-province" id="modal-province"></div>
+    <div class="modal-bio" id="modal-bio"></div>
+    <div class="modal-contacts" id="modal-contacts"></div>
+    <div class="modal-time" id="modal-time"></div>
+  </div>
+</div>
+
+<!-- Plain script for contact toggles (must be before module) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.contact-item').forEach(item => {
+    const toggle = item.querySelector('.contact-toggle');
+    const input  = item.querySelector('.contact-input');
+    toggle.addEventListener('click', () => {
+      const on = item.classList.toggle('selected');
+      input.style.display = on ? 'block' : 'none';
+      if (on) setTimeout(() => input.focus(), 30);
+      else input.value = '';
+    });
+  });
+});
+
+// Particles
+(function(){
+  const c = document.getElementById('particles');
+  const colors = ['#6C63FF','#8B5CF6','#38BDF8','#818CF8'];
+  for(let i=0;i<22;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random()*4+2;
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${Math.random()*18+10}s;animation-delay:${Math.random()*10}s`;
+    c.appendChild(p);
+  }
+})();
+
+// Logo
+function handleLogoUpload(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const b=document.getElementById('nav-logo');
+    b.innerHTML=`<img src="${ev.target.result}"/><input type="file" accept="image/*" onchange="handleLogoUpload(event)"/>`;
+    localStorage.setItem('school_logo',ev.target.result);
+  };r.readAsDataURL(f);
+}
+const sl=localStorage.getItem('school_logo');
+if(sl){const b=document.getElementById('nav-logo');b.innerHTML=`<img src="${sl}"/><input type="file" accept="image/*" onchange="handleLogoUpload(event)"/>`;}
+
+// Photo upload
+let photoBase64=null;
+function handlePhotoUpload(e){
+  const f=e.target.files[0]; if(!f)return;
+  if(f.size>2*1024*1024){alert('รูปใหญ่เกินไปครับ ไม่เกิน 2MB');return;}
+  const r=new FileReader();
+  r.onload=ev=>{
+    photoBase64=ev.target.result;
+    const pu=document.getElementById('photo-upload');
+    const old=pu.querySelector('img.preview'); if(old)old.remove();
+    const img=document.createElement('img');img.className='preview';img.src=photoBase64;pu.prepend(img);
+  };r.readAsDataURL(f);
+}
+
+// Page nav
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el=document.getElementById(id);
+  el.classList.remove('active'); void el.offsetWidth; el.classList.add('active');
+  window.scrollTo(0,0);
+}
+function scrollToDiscover(){
+  document.getElementById('discover').scrollIntoView({behavior:'smooth'});
+}
+
+// Filter
+let currentFilter='all';
+function setFilter(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  filterMembers();
+}
+function filterMembers(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
+  allMembers.forEach(m=>{
+    const card=document.getElementById('mc-'+m.key);
+    if(!card)return;
+    const matchQ=!q||m.nickname.toLowerCase().includes(q)||(m.province||'').toLowerCase().includes(q)||Object.values(m.contacts||{}).some(v=>v.toLowerCase().includes(q));
+    const matchF=currentFilter==='all'||m.contacts&&m.contacts[currentFilter]!==undefined;
+    card.style.display=(matchQ&&matchF)?'':'none';
+  });
+}
+
+// Random
+function openRandomMember(){
+  const vis=allMembers.filter(m=>{const c=document.getElementById('mc-'+m.key);return c&&c.style.display!=='none';});
+  if(!vis.length)return;
+  openModal(vis[Math.floor(Math.random()*vis.length)]);
+}
+
+// Modal
+function openModal(m){
+  const ov=document.getElementById('modal-overlay');
+  const CMETA={ig:{icon:'📸',label:'Instagram'},fb:{icon:'📘',label:'Facebook'},line:{icon:'💬',label:'Line'},tiktok:{icon:'🎵',label:'TikTok'},discord:{icon:'🎮',label:'Discord'}};
+  const av=document.getElementById('modal-av');
+  if(m.photo){av.innerHTML=`<img class="modal-avatar" src="${m.photo}"/>`;}
+  else{const d=document.createElement('div');d.className='modal-avatar-init';d.style.background=hashColor(m.nickname);d.textContent=m.nickname.slice(0,2).toUpperCase();av.innerHTML='';av.appendChild(d);}
+  document.getElementById('modal-name').textContent=m.nickname;
+  document.getElementById('modal-province').textContent=m.province?'📍 '+m.province:'';
+  document.getElementById('modal-bio').textContent=m.bio||'';
+  const cc=document.getElementById('modal-contacts');
+  cc.innerHTML=Object.entries(m.contacts||{}).map(([id,val])=>{const mt=CMETA[id]||{icon:'📌',label:id};return`<div class="modal-contact-row"><span class="icon">${mt.icon}</span><span class="label">${mt.label}</span><span class="val">${esc(val||'-')}</span></div>`;}).join('');
+  document.getElementById('modal-time').textContent='เข้าร่วม '+timeAgo(m.tsClient||Date.now());
+  ov.classList.add('open');
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+
+// Utils
+const COLORS=['#6C63FF','#8B5CF6','#38BDF8','#f472b6','#34d399','#fb923c'];
+function hashColor(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return COLORS[Math.abs(h)%COLORS.length];}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function timeAgo(ts){const d=Math.floor((Date.now()-ts)/1000);if(d<60)return'เมื่อกี้';if(d<3600)return Math.floor(d/60)+' นาทีที่แล้ว';if(d<86400)return Math.floor(d/3600)+' ชม.ที่แล้ว';return Math.floor(d/86400)+' วันที่แล้ว';}
+
+let allMembers=[];
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, push, onValue, update, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+// ============================================================
+//  วาง firebaseConfig ของคุณตรงนี้
+// ============================================================
+const firebaseConfig = {
+  apiKey:            "AIzaSyDdo5kNLR2rNfevl7peT5ttMKXw6tJyo6w",
+  authDomain:        "test-70d18.firebaseapp.com",
+  databaseURL:       "https://test-70d18-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "test-70d18",
+  storageBucket:     "test-70d18.firebasestorage.app",
+  messagingSenderId: "670744238655",
+  appId:             "1:670744238655:web:79a2d08999c6d1ab65768a"
+};
+// ============================================================
+
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+const MREF=ref(db,'members');
+const $=id=>document.getElementById(id);
+
+let myEntry=null;
+let likedKeys=JSON.parse(localStorage.getItem('liked_keys')||'[]');
+
+// ── Realtime listener ──
+onValue(MREF, snap=>{
+  const data=snap.val()||{};
+  allMembers=Object.entries(data).map(([key,v])=>({key,...v})).sort((a,b)=>(b.tsClient||0)-(a.tsClient||0));
+  renderMembers(allMembers);
+  // stats
+  const provinces=new Set(allMembers.map(m=>m.province).filter(Boolean));
+  const totalLikes=allMembers.reduce((s,m)=>s+(m.likes||0),0);
+  $('stat-members').textContent=allMembers.length;
+  $('stat-provinces').textContent=provinces.size;
+  $('stat-likes').textContent=totalLikes;
+  $('member-count').textContent=allMembers.length;
+});
+
+function renderMembers(members){
+  const grid=$('members-grid');
+  if(!members.length){grid.innerHTML='<div class="empty"><div class="icon">🌟</div><p>ยังไม่มีสมาชิกเลย!<br>เป็นคนแรกที่แนะนำตัวสิ</p></div>';return;}
+  const CMETA={ig:{icon:'📸'},fb:{icon:'📘'},line:{icon:'💬'},tiktok:{icon:'🎵'},discord:{icon:'🎮'}};
+  grid.innerHTML=members.map((m,i)=>{
+    const av=m.photo?`<img class="mcard-av" src="${m.photo}" alt="${esc(m.nickname)}">`:`<div class="mcard-av-init" style="background:${hashColor(m.nickname)}">${m.nickname.slice(0,2).toUpperCase()}</div>`;
+    const ctags=Object.entries(m.contacts||{}).map(([id,v])=>`<span class="ctag">${CMETA[id]?.icon||'📌'} ${esc(v||id)}</span>`).join('');
+    const liked=likedKeys.includes(m.key);
+    return`<div class="mcard" id="mc-${m.key}" style="animation-delay:${i*.04}s" onclick="openModal(allMembers.find(x=>x.key==='${m.key}'))">
+      <div class="mcard-top">${av}<div class="mcard-info"><div class="mcard-name">${esc(m.nickname)}</div><div class="mcard-province">${m.province?'📍 '+esc(m.province):''}</div></div></div>
+      <div class="mcard-bio">${esc(m.bio||'ยังไม่มีคำแนะนำตัว...')}</div>
+      <div class="mcard-contacts">${ctags}</div>
+      <div class="mcard-footer">
+        <span class="mcard-time">${timeAgo(m.tsClient||Date.now())}</span>
+        <button class="like-btn ${liked?'liked':''}" onclick="toggleLike(event,'${m.key}')">❤️ ${m.likes||0}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Like
+window.toggleLike=function(e,key){
+  e.stopPropagation();
+  const btn=e.currentTarget;
+  const already=likedKeys.includes(key);
+  const m=allMembers.find(x=>x.key===key); if(!m)return;
+  const newLikes=(m.likes||0)+(already?-1:1);
+  if(already){likedKeys=likedKeys.filter(k=>k!==key);btn.classList.remove('liked');}
+  else{likedKeys.push(key);btn.classList.add('liked');}
+  localStorage.setItem('liked_keys',JSON.stringify(likedKeys));
+  update(ref(db,'members/'+key),{likes:Math.max(0,newLikes)});
+};
+
+// Submit
+window.handleSubmit=async function(){
+  const nickname=$('input-nickname').value.trim();
+  const province=$('input-province').value;
+  const bio=$('input-bio').value.trim();
+  const err=$('form-err');
+  const contacts={};
+  let selectedCount=0;
+  document.querySelectorAll('.contact-item.selected').forEach(item=>{
+    const id=item.dataset.id;
+    const val=item.querySelector('.contact-input').value.trim();
+    contacts[id]=val;selectedCount++;
+  });
+  if(!nickname){err.textContent='กรุณากรอกชื่อเล่นก่อนนะ';err.classList.add('show');return;}
+  if(!province){err.textContent='กรุณาเลือกจังหวัดก่อนนะ';err.classList.add('show');return;}
+  if(!selectedCount){err.textContent='กรุณาเลือกช่องทางติดต่ออย่างน้อย 1 ช่องทาง';err.classList.add('show');return;}
+  err.classList.remove('show');
+  $('btn-submit').disabled=true;$('btn-submit').textContent='กำลังบันทึก...';
+  try{
+    await push(MREF,{nickname,province,contacts,bio:bio||'',photo:photoBase64||'',likes:0,tsClient:Date.now(),ts:serverTimestamp()});
+    showPage('page-home');
+    setTimeout(scrollToDiscover,400);
+    // reset
+    $('input-nickname').value='';$('input-province').value='';$('input-bio').value='';
+    photoBase64=null;
+    const pu=$('photo-upload');pu.innerHTML=`<span class="upload-icon">📷</span><span class="upload-text">อัปโหลด<br>รูป</span><input type="file" accept="image/*" onchange="handlePhotoUpload(event)"/><div class="change-overlay">เปลี่ยน</div>`;
+    document.querySelectorAll('.contact-item').forEach(item=>{item.classList.remove('selected');item.querySelector('.contact-input').style.display='none';item.querySelector('.contact-input').value='';});
+  }catch(e){
+    err.textContent='เกิดข้อผิดพลาด: '+e.message;err.classList.add('show');
+    $('btn-submit').disabled=false;$('btn-submit').textContent='✨ ยืนยัน ไปดูคนอื่นๆ เลย!';
+  }
+};
+</script>
+</body>
+</html>
